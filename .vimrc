@@ -25,6 +25,14 @@ Bundle 'flazz/vim-colorschemes'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 
+" To properly install "command-t" don't forget to compile the C-extension via
+"
+"   $ cd ~/.vim/bundle/command-t/ruby/command-t
+"   $ ruby extconf.h
+"   $ make
+"
+Bundle 'git://git.wincent.com/command-t.git'
+
 """ Bundle List END
 
 syntax on
@@ -112,11 +120,12 @@ set showcmd " show typed-in commands in normal mode
 """ Color Schemes {
 """ =============
     set background=dark
-    colorscheme ir_black
-    "colorscheme github
-    # another good one is
-    # set background=light
-    # colorscheme zen
+    "colorscheme ir_black
+    "colorscheme mustang
+    colorscheme molokai
+    " another good one is
+    "set background=light
+    "colorscheme zen
 """ }
 
 """ ============
