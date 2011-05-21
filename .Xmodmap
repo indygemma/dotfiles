@@ -1,0 +1,7 @@
+!! No Caps Lock
+clear lock
+!! Make Caps lock an escape key
+keycode 0x42 = Escape
+!! switch ^° with <> on apple keyboard
+!keycode 49 = less greater less greater bar brokenbar bar
+!keycode 94 = bar asciitilde Cyrillic_io Cyrillic_IO
