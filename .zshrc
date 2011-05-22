@@ -33,3 +33,15 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:~/.cabal/bin
+
+# add some CD aliases
+ng=~/projects/python/newsgrape-ng
+blog=~/projects/websites/indygemma.com
+
+# bind pushd to "page up"
+function directory_up {
+  pushd -1
+  zle reset-prompt
+}
+zle -N directory-up directory_up
+bindkey "\e[5~" directory-up
