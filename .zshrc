@@ -10,6 +10,7 @@ export ZSH_THEME="random"
 #
 #   nanotech
 #   jonathan
+#   muse
 #
 
 # Set to this to use case-sensitive completion
