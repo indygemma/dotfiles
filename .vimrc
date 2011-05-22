@@ -24,6 +24,10 @@ Bundle 'tpope/vim-fugitive'
 Bundle 'flazz/vim-colorschemes'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
+Bundle 'Lokaltog/vim-easymotion'
+" Fuzzyfinder requires 'L9' as dependency
+Bundle 'L9'
+Bundle 'FuzzyFinder'
 
 " To properly install "command-t" don't forget to compile the C-extension via
 "
@@ -448,6 +452,11 @@ let g:vikiOpenFileWith_ANY    = "silent !gnome-open %{FILE}"
 "let g:vikiOpenUrlWith_mailto = 'thunderbird -compose %{URL}'
 "let g:vikiOpenUrlWith_ANY    = "silent !firefox %{URL}"
 let g:vikiOpenUrlWith_ANY     = "silent !chromium-browser %{URL}"
+
+"""
+""" Easymotion
+"""
+"let g:EasyMotion_leader_key = '<Leader>m'
 
 """ NOTES
 " To install vimballs, load the .vba.gz file in vim and execute
