@@ -10,3 +10,5 @@
 	threads = 0
 [core]
 	excludesfile = /home/conrad/.gitignore
+[rerere]
+	enabled = 1
