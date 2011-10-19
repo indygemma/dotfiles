@@ -19,15 +19,28 @@ set rtp+=~/.vim/vundle.git/
 call vundle#rc()
 
 """ Bundle List START
+Bundle 'gmarik/vundle'
 
 Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-repeat'
+" this didn't work, just like taglist.vim
+Bundle 'SuperTab-continued'
 Bundle 'flazz/vim-colorschemes'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'Lokaltog/vim-easymotion'
+Bundle 'lokaltog/vim-easymotion'
+Bundle 'msanders/snipmate.vim'
+Bundle 'sontek/rope-vim'
+Bundle 'mileszs/ack.vim'
 " Fuzzyfinder requires 'L9' as dependency
 Bundle 'L9'
 Bundle 'FuzzyFinder'
+Bundle 'TaskList.vim'
+Bundle 'Rip-Rip/clang_complete'
+Bundle 'ervandew/supertab'
+
+" install 'exuberant-ctags' to activate this
+"Bundle 'taglist.vim'
 
 " To properly install "command-t" don't forget to compile the C-extension via
 "
@@ -36,6 +49,8 @@ Bundle 'FuzzyFinder'
 "   $ make
 "
 Bundle 'git://git.wincent.com/command-t.git'
+Bundle 'Align'
+Bundle 'matchit'
 
 """ Bundle List END
 
@@ -123,13 +138,15 @@ set showcmd " show typed-in commands in normal mode
 """ =============
 """ Color Schemes {
 """ =============
-    set background=dark
     "colorscheme ir_black
     "colorscheme mustang
-    colorscheme molokai
-    " another good one is
+    "colorscheme molokai
     "set background=light
+    " another good one is
+    set background=dark
     "colorscheme zen
+    "colorscheme desert
+    colorscheme molokai
 """ }
 
 """ ============
@@ -145,9 +162,11 @@ set showcmd " show typed-in commands in normal mode
 
     " change to a buffer
     map <A-b> :FufBuffer<cr>
+    map <F6> :FufBuffer<cr>
 
     " map Cmd-T
     map <A-t> :CommandT<cr>
+    "map <F5> :CommandT<cr>
     "map <A-t> :FufFile<cr>
 
     " map NerdTree
@@ -169,8 +188,10 @@ set showcmd " show typed-in commands in normal mode
     map <C-+> <C-W>+
 
     " buffer management
-    map <right> :bn<CR>
-    map <left>  :bp<CR>
+    map <right> :bnext<CR>
+    "map <S-l><S-l> :tabnext<cr>
+    map <left>  :bprevious<CR>
+    "map <C-h>   :tabprevious<CR>
     map <Leader>bd  :bd<CR>
 
     " change directory to the directory of the current file
@@ -264,7 +285,7 @@ endfunction
     autocmd BufRead *.wsdl set filetype=xml
     autocmd BufRead *.hx set filetype=haxe
     autocmd BufRead,BufNewFile *.json set filetype=json
-    autocmd BufRead,BufNewFile *.py compiler nose
+    "autocmd BufRead,BufNewFile *.py compiler ose
     autocmd BufRead,BufNewFile *.mlua set ft=lua
     autocmd BufRead,BufNewFile *.viki set ft=viki
 """ }
@@ -371,6 +392,11 @@ endfunction
 """ ===============
     let g:miniBufExplMapWindowNavVim = 1
 
+""" ==========
+""" snipmate
+""" ==========
+    let g:snips_author = "Conrad Indiono"
+
 """ =======
 """ IPython
 """ =======
@@ -411,6 +437,7 @@ nnoremap <leader>o :call ReadOutputFromIPythonLog("log")<cr>
 
     " command! -nargs=+ SilentGrep execute 'silent grep! <nargs>' | copen 33
     map ä :Ack 
+    let g:ackprg="ack-grep -H --nocolor --nogroup --column"
     " text grep
     "map + :grep --text 
 
@@ -457,6 +484,17 @@ let g:vikiOpenUrlWith_ANY     = "silent !chromium-browser %{URL}"
 """ Easymotion
 """
 "let g:EasyMotion_leader_key = '<Leader>m'
+
+
+"""
+""" RopeVim
+"""
+let g:ropevim_enable_shortcuts = 1
+
+"""
+""" pep8
+"""
+"let g:pep8_map='<leader>8'
 
 """ NOTES
 " To install vimballs, load the .vba.gz file in vim and execute

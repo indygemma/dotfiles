@@ -11,6 +11,7 @@ export ZSH_THEME="random"
 #   nanotech
 #   jonathan
 #   muse
+#   darkblood
 #
 
 # Set to this to use case-sensitive completion
@@ -27,7 +28,7 @@ export ZSH_THEME="random"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git)
+plugins=(git pip git-flow)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -45,3 +46,12 @@ function directory_up {
 }
 zle -N directory-up directory_up
 bindkey "\e[5~" directory-up
+bindkey ^W forward-word
+bindkey ^B backward-word
+bindkey ^D delete-word
+alias v="vim --remote-tab-silent"
+
+# project shortcuts
+alias project_ng="cd ~/projects/python/newsgrape-ng && . ve/bin/activate"
+alias project_ngcode="project_ng && cd src/newsgrape"
+alias project_medusa="cd ~/projects/python/medusa && . ve/bin/activate"
