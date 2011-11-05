@@ -38,6 +38,7 @@ Bundle 'FuzzyFinder'
 Bundle 'TaskList.vim'
 Bundle 'Rip-Rip/clang_complete'
 Bundle 'ervandew/supertab'
+Bundle 'kien/ctrlp.vim'
 
 " install 'exuberant-ctags' to activate this
 "Bundle 'taglist.vim'
@@ -143,10 +144,11 @@ set showcmd " show typed-in commands in normal mode
     "colorscheme molokai
     "set background=light
     " another good one is
-    set background=dark
+    "set background=dark
     "colorscheme zen
     "colorscheme desert
-    colorscheme molokai
+    "colorscheme molokai
+    :color evening
 """ }
 
 """ ============
@@ -188,10 +190,10 @@ set showcmd " show typed-in commands in normal mode
     map <C-+> <C-W>+
 
     " buffer management
-    map <right> :bnext<CR>
-    "map <S-l><S-l> :tabnext<cr>
-    map <left>  :bprevious<CR>
-    "map <C-h>   :tabprevious<CR>
+    "map <right> :bnext<CR>
+    map <S-l> :tabnext<cr>
+    "map <left>  :bprevious<CR>
+    map <S-h>   :tabprevious<CR>
     map <Leader>bd  :bd<CR>
 
     " change directory to the directory of the current file
@@ -502,6 +504,15 @@ let g:ropevim_enable_shortcuts = 1
 "     :UseVimball ~/.vim/bundle/bundle-name-for-the-vim-plugin
 "
 " This will extract the contents into the directory for pathogen to load
+
+"""
+""" CtrlP
+"""
+let g:ctrlp_working_path_mode = 0
+" 0 - Don't manage working directory
+" 1 - Current buffer's parent directory
+" 2 - First parent with .git,.svn etc.
+
 
 " TODO: closetag.vim
 " TODO: minibufexpl
