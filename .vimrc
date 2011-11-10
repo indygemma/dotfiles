@@ -525,3 +525,5 @@ function! PlaySound()
 endfunction
 "autocmd CursorMovedI * call PlaySound()
 filetype plugin on
+
+hi CursorLine term=reverse cterm=none ctermbg=4
