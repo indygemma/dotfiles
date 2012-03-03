@@ -224,6 +224,11 @@ set showcmd " show typed-in commands in normal mode
 
 """ }
 
+""" =============
+""" Abbreviations
+""" =============
+ab ipdb import ipdb;ipdb.set_trace()
+
 """ =================
 """ Window Management
 """ =================
