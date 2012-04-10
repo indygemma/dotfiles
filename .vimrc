@@ -288,9 +288,12 @@ endfunction
     autocmd FileType html set ft=htmldjango.html
     autocmd FileType shpaml set fletype=html
     autocmd BufRead *.shpaml set filetype=html
+    autocmd BufRead *.hamlet set filetype=html
     autocmd BufRead *.less set filetype=css
+    autocmd BufRead *.lucius set filetype=css
     autocmd BufRead *.wsdl set filetype=xml
     autocmd BufRead *.hx set filetype=haxe
+    autocmd BufRead *.julius set filetype=javascript
     autocmd BufRead,BufNewFile *.json set filetype=json
     "autocmd BufRead,BufNewFile *.py compiler ose
     autocmd BufRead,BufNewFile *.mlua set ft=lua
