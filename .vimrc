@@ -147,8 +147,8 @@ set showcmd " show typed-in commands in normal mode
     "set background=dark
     "colorscheme zen
     "colorscheme desert
-    "colorscheme molokai
-    :color evening
+    colorscheme molokai
+    ":color evening
 """ }
 
 """ ============
