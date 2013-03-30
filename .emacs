@@ -1,5 +1,10 @@
-;; delete menu bar
+;; delete menu/tool/scroll bar
 (menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; set font
+(set-default-font "Monaco-12")
 
 (add-to-list 'load-path "~/.emacs.d/el-get/el-get")
 
@@ -9,6 +14,11 @@
     (lambda (s)
       (end-of-buffer)
       (eval-print-last-sexp))))
+
+(setq
+ el-get-sources
+ '(el-get
+   evil))
 
 (el-get 'sync)
 
