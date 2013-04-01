@@ -26,9 +26,17 @@
 (require 'evil)
 (evil-mode 1)
 
-;; custom variables
-(custom-set-variables
- '(haskell-program-name "cabal-dev ghci"))
+;; no need to go to "emacs-mode", just use "insert mode" to use emacs stuff
+;(setcdr evil-insert-state-map nil)
+;(define-key evil-insert-state-map
+;  (read-kbd-macro evil-toggle-key) 'evil-normal-state)
+(define-key evil-insert-state-map "jj" 'evil-normal-state)
+
+; easier window movement
+(define-key key-translation-map (kbd "C-h") (kbd "C-w h"))
+(define-key key-translation-map (kbd "C-j") (kbd "C-w j"))
+(define-key key-translation-map (kbd "C-k") (kbd "C-w k"))
+(define-key key-translation-map (kbd "C-l") (kbd "C-w l"))
 
 ;; load color theme
 (load "~/.emacs.d/colorthemes/color-theme-molokai.el")
@@ -44,3 +52,22 @@
 (define-key global-map "\C-cl" 'org-store-link)
 (define-key global-map "\C-ca" 'org-agenda)
 (setq org-log-done t)
+
+;; custom variables
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ ;'(haskell-program-name "cabal-dev ghci")
+ '(haskell-program-name "ghci")
+ '(org-agenda-files (quote ("~/Dropbox/org"))))
+
+; (require 'utf-8m)
+; (set-file-name-coding-system 'utf-8m)
+
+;; to fix umlaute in "emacs -nw" on mac os x
+(set-default-coding-systems 'iso-latin-1)
+(set-keyboard-coding-system 'iso-latin-1)
+(set-terminal-coding-system 'iso-latin-1)
+(prefer-coding-system 'iso-latin-1)
