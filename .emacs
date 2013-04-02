@@ -30,7 +30,7 @@
 ;(setcdr evil-insert-state-map nil)
 ;(define-key evil-insert-state-map
 ;  (read-kbd-macro evil-toggle-key) 'evil-normal-state)
-(define-key evil-insert-state-map "jj" 'evil-normal-state)
+;(define-key evil-insert-state-map "jj" 'evil-normal-state)
 
 ; easier window movement
 (define-key key-translation-map (kbd "C-h") (kbd "C-w h"))
@@ -47,6 +47,7 @@
 (global-linum-mode 1)
 
 ;; setup org-mode
+(autoload 'org-mode "org" "Org mode" t)
 (require 'org-install)
 (add-to-list 'auto-mode-alist '("\\.org$" . org-mode))
 (define-key global-map "\C-cl" 'org-store-link)
@@ -62,6 +63,27 @@
  ;'(haskell-program-name "cabal-dev ghci")
  '(haskell-program-name "ghci")
  '(org-agenda-files (quote ("~/Dropbox/org"))))
+
+(setq org-directory "~/Dropbox/org")
+(setq org-default-notes-file (concat org-directory "/refile.org"))
+
+(global-set-key (kbd "C-c c") 'org-capture)
+
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file "~/Dropbox/org/refile.org")
+	       "* TODO %? :Inbox:\n%U")
+	      )))
+
+; Targets include this file and any file contributing to the agenda - up to 9 levels deep
+(setq org-refile-targets (quote ((nil :maxlevel . 9)
+				 (org-agenda-files :maxlevel . 9))))
+; use full outline paths for refile targets
+(setq org-refile-use-outline-path t)
+
+(setq org-refile-path-complete-in-steps t)
+
+;; do not show in agenda if the task is done (view in log mode if required)
+(setq org-agenda-skip-scheduled-if-done t)
 
 ; (require 'utf-8m)
 ; (set-file-name-coding-system 'utf-8m)
