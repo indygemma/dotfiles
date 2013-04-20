@@ -28,7 +28,8 @@ Bundle 'SuperTab-continued'
 Bundle 'flazz/vim-colorschemes'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
-Bundle 'lokaltog/vim-easymotion'
+Bundle 'Lokaltog/vim-easymotion'
+Bundle 'Lokaltog/vim-powerline'
 Bundle 'msanders/snipmate.vim'
 Bundle 'sontek/rope-vim'
 Bundle 'mileszs/ack.vim'
@@ -39,6 +40,27 @@ Bundle 'TaskList.vim'
 Bundle 'Rip-Rip/clang_complete'
 Bundle 'ervandew/supertab'
 Bundle 'kien/ctrlp.vim'
+Bundle 'lukerandall/haskellmode-vim'
+Bundle 'hsitz/VimOrganizer'
+Bundle 'calendar.vim'
+Bundle 'NarrowRegion'
+" for neco-ghc and ghcmod-vim
+Bundle 'Shougo/vimshell'
+" for neco-ghc and ghcmod-vim....need extra step: 'make -f make_mac.mak'
+Bundle 'Shougo/vimproc'
+set rtp+=~/.vim/bundle/vimproc
+" requires 'cabal install ghc-mod'
+Bundle 'ujihisa/neco-ghc'
+set rtp+=~/.vim/bundle/neco-ghc
+Bundle 'eagletmt/ghcmod-vim'
+Bundle 'Shougo/neocomplcache'
+set rtp+=~/.vim/bundle/neocomplcache
+Bundle 'thinca/vim-quickrun'
+" requires cd into bundle and 'cabal configure && cabal build && cabal install'
+Bundle 'bitc/lushtags'
+set rtp+=~/.vim/bundle/lushtags
+Bundle 'majutsushi/tagbar'
+Bundle 'scratch.vim'
 
 " install 'exuberant-ctags' to activate this
 "Bundle 'taglist.vim'
@@ -100,8 +122,8 @@ set showcmd " show typed-in commands in normal mode
     set pastetoggle=<F4>
 
     " display tabs and spaces
-    set listchars=tab:»·,trail:· " show trailing spaces as a circle. turn off with 'set nolist'
-    set list
+    "set listchars=tab:»·,trail:· " show trailing spaces as a circle. turn off with 'set nolist'
+    "set list
 
     " copy/paste with the system clipboard
     "map ^P "+gP
@@ -133,7 +155,11 @@ set showcmd " show typed-in commands in normal mode
 """ ===========
     set guioptions-=m
     set guioptions-=T
-    set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
+    set guioptions-=r " remove the graphical scrollbars
+    set guioptions-=L
+    "set guifont=Bitstream\ Vera\ Sans\ Mono\ 10
+    set guifont=Monaco:h12
+    "set guifont=Inconsolata-dz:h12
 """ }
 
 """ =============
@@ -147,8 +173,15 @@ set showcmd " show typed-in commands in normal mode
     "set background=dark
     "colorscheme zen
     "colorscheme desert
-    colorscheme molokai
+    " colorscheme molokai
     ":color evening
+    "colorscheme vilight
+    "colorscheme codeburn
+    colorscheme custom_molokai
+    "colorscheme oceanlight
+    "colorscheme oceanblack
+    "colorscheme jellybeans
+    "colorscheme darkspectrum
 """ }
 
 """ ============
@@ -173,6 +206,12 @@ set showcmd " show typed-in commands in normal mode
 
     " map NerdTree
     map ö :NERDTreeToggle<cr>
+
+    " map TagBar
+    map ü :TagbarToggle<cr>
+
+    " map QuickRun
+    map + :QuickRun<cr>
 
     " ctrl-s saves the current document
     map <C-s> :w<cr>
@@ -220,9 +259,70 @@ set showcmd " show typed-in commands in normal mode
     map <Leader>bu :BikeUndo<cr>
 
     " open a scratch file in vertical split (requires scratch.vim)
-    "map _s :Sscratch<cr>
+    map <S-F10> :TODOs<cr>
 
 """ }
+
+""" =======================
+""" Custom to do-list buffer
+""" =======================
+let TODOBufferName = "~/Dropbox/__VIM_TODO__.txt"
+let TODOToggled = -1
+
+function! TodoListToggle(new_win)
+    if g:TODOToggled == 1
+        call TodoListClose()
+        let g:TODOToggled = -1
+    else
+        call TodoListOpen(a:new_win)
+        let g:TODOToggled = 1
+    endif
+endfunction
+
+function! TodoListClose()
+    let bufnum = bufnr(g:TODOBufferName)
+    if bufnum != -1
+        exe "bd " . bufnum
+    endif
+endfunction
+
+function! TodoListOpen(new_win)
+    let split_win = a:new_win
+    if !split_win && modified
+        let split_win = 1
+    endif
+
+    let todo_bufnum = bufnr(g:TODOBufferName)
+    if todo_bufnum == -1
+        " open a new todo buffer
+        if split_win
+            exe "new " . g:TODOBufferName
+        else
+            exe "edit " . g:TODOBufferName
+        endif
+    else
+        " todo buffer is already created. Check whether it is open
+        " in one of the windows
+        let todo_winnum = bufwinnr(todo_bufnum)
+        if todo_winnum != -1
+            " Jump to the window which has the scratch buffer if we
+            " are not already in that window
+            if winnr() != todo_winnum
+                exe todo_winnum . "wincmd w"
+            endif
+        else
+            " create a new todo buffer
+            if split_win
+                exe "split +buffer" . todo_bufnum
+            else
+                exe "buffer " . todo_bufnum
+            endif
+        endif
+    endif
+endfunction
+
+command! -nargs=0 TODO call TodoListToggle(0)
+command! -nargs=0 TODOs call TodoListToggle(1)
 
 """ =============
 """ Abbreviations
@@ -253,6 +353,28 @@ function! MaximizeToggle()
         only
     endif
 endfunction
+
+function! MarkWindowSwap()
+    let g:markedWinNum = winnr()
+endfunction
+
+function! DoWindowSwap()
+    "Mark destination
+    let curNum = winnr()
+    let curBuf = bufnr( "%" )
+    exe g:markedWinNum . "wincmd w"
+    "Switch to source and shuffle dest->source
+    let markedBuf = bufnr( "%" )
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' curBuf
+    "Switch to dest and shuffle source->dest
+    exe curNum . "wincmd w"
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' markedBuf 
+endfunction
+
+nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
+nmap <silent> <leader>pw :call DoWindowSwap()<CR>
 
 """ ===========
 """ Status Line
@@ -298,6 +420,13 @@ endfunction
     "autocmd BufRead,BufNewFile *.py compiler ose
     autocmd BufRead,BufNewFile *.mlua set ft=lua
     autocmd BufRead,BufNewFile *.viki set ft=viki
+    au! BufRead,BufWrite,BufWritePost,BufNewFile *.org 
+    au BufEnter *.org call org#SetOrgFileType()
+
+    " setup haskell
+    "autocmd FileType hs setlocal omnifunc=necoghc#omnifunc
+    autocmd BufRead *.hs map tt :GhcModType<cr>
+    autocmd BufRead *.hs map tl :GhcModCheckAndLintAsync<cr>
 """ }
 
 """ =======
@@ -394,8 +523,12 @@ endfunction
         set foldmarker=\ {{{,\ }}}
     endif
 
-    nnoremap <s-space> za
-    vnoremap <s-space> zf
+    " remember folding and cursor position when closing/opening buffers
+    autocmd BufWinLeave *.* mkview
+    autocmd BufWinEnter *.* silent loadview 
+
+    nnoremap <space> za
+    vnoremap <space> zf
 
 """ ===============
 """ Minibufexpl.vim
@@ -447,7 +580,7 @@ nnoremap <leader>o :call ReadOutputFromIPythonLog("log")<cr>
 
     " command! -nargs=+ SilentGrep execute 'silent grep! <nargs>' | copen 33
     map ä :Ack 
-    let g:ackprg="ack-grep -H --nocolor --nogroup --column"
+    let g:ackprg="ack -H --nocolor --nogroup --column"
     " text grep
     "map + :grep --text 
 
@@ -521,6 +654,36 @@ let g:ctrlp_working_path_mode = 0
 " 1 - Current buffer's parent directory
 " 2 - First parent with .git,.svn etc.
 
+"""
+""" haskell-mode
+"""
+" Configure browser for haskell_doc.vim
+let g:haddock_browser = "open"
+let g:haddock_browser_callformat = "%s %s"
+
+function! SetToCabalBuild()
+    if glob("*.cabal") != ''
+        let a = system( 'grep "/\* package .* \*/"  dist/build/autogen/cabal_macros.h' )
+        let b = system( 'sed -e "s/\/\* /-/" -e "s/\*\///"', a )
+        let pkgs = "-hide-all-packages " .  system( 'xargs echo -n', b )
+        let hs = "import Distribution.Dev.Interactive\n"
+        let hs .= "import Data.List\n"
+        let hs .= 'main = withOpts [""] error return >>= putStr . intercalate " "'
+        let opts = system( 'runhaskell', hs )
+        let b:ghc_staticoptions = opts . ' ' . pkgs
+    else
+        let b:ghc_staticoptions = '-Wall -fno-warn-name-shadowing'
+    endif
+    execute 'setlocal makeprg=' . g:ghc . '\ ' . escape(b:ghc_staticoptions,' ') .'\ -e\ :q\ %'
+    let b:my_changedtick -=1
+endfunction
+
+"autocmd BufEnter *.hs,*.lhs :call SetToCabalBuild()
+"autocmd BufEnter *.hs compiler ghc
+
+""" VimOrganizer
+let g:calendar_navi = ''
+let g:org_todo_setup = "TODO | DONE"
 
 " TODO: closetag.vim
 " TODO: minibufexpl
@@ -535,3 +698,21 @@ endfunction
 filetype plugin on
 
 hi CursorLine term=reverse cterm=none ctermbg=4
+
+imap jj <Esc>
+
+set encoding=utf8
+
+""" neocomplcache
+"let g:neocomplcache_enable_at_startup = 1
+
+""" tagbar
+let g:tagbar_ctags_bin = "/usr/bin/ctags"
+
+""" custom WIP helpers
+
+function! TodoFVCollect()
+    execute "normal ma"
+    execute ":'a,$g/@/m'a"
+endfunction
+map <Leader>l :call TodoFVCollect()<CR>
