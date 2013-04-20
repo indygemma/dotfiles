@@ -57,13 +57,13 @@
 
 ;; custom variables
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(haskell-program-name "cabal-dev ghci")
- ;'(haskell-program-name "ghci")
- '(org-agenda-files (quote ("~/Dropbox/org"))))
+ '(org-agenda-files (quote ("~/Dropbox/org")))
+ '(safe-local-variable-values (quote ((encoding . utf-8)))))
 
 (setq org-directory "~/Dropbox/org")
 (setq org-default-notes-file (concat org-directory "/refile.org"))
@@ -94,3 +94,13 @@
 (set-keyboard-coding-system 'iso-latin-1)
 (set-terminal-coding-system 'iso-latin-1)
 (prefer-coding-system 'iso-latin-1)
+
+(add-to-list 'load-path "~/.emacs.d/")
+(require 'auto-complete-config)
+(ac-config-default)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
