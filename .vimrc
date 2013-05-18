@@ -1,5 +1,5 @@
 " ~/.vimrc
-" 
+"
 " Author: Conrad Indiono
 "
 " How to Install:
@@ -29,14 +29,13 @@ Bundle 'flazz/vim-colorschemes'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'Lokaltog/vim-powerline'
 Bundle 'msanders/snipmate.vim'
 Bundle 'sontek/rope-vim'
 Bundle 'mileszs/ack.vim'
 " Fuzzyfinder requires 'L9' as dependency
 Bundle 'L9'
 Bundle 'FuzzyFinder'
-Bundle 'TaskList.vim'
+Bundle 'vim-scripts/TaskList.vim'
 Bundle 'Rip-Rip/clang_complete'
 Bundle 'ervandew/supertab'
 Bundle 'kien/ctrlp.vim'
@@ -61,6 +60,10 @@ Bundle 'bitc/lushtags'
 set rtp+=~/.vim/bundle/lushtags
 Bundle 'majutsushi/tagbar'
 Bundle 'scratch.vim'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'eagletmt/ghcmod-vim'
+Bundle 'Shougo/vimproc'
+Bundle 'vim-pandoc/vim-pandoc'
 
 " install 'exuberant-ctags' to activate this
 "Bundle 'taglist.vim'
@@ -82,6 +85,7 @@ syntax enable
 filetype on
 filetype plugin on
 filetype plugin indent on " enable file-level indenting with gg=G
+set mouse=a
 set tabstop=4
 set smarttab
 set shiftwidth=4
@@ -167,13 +171,12 @@ set showcmd " show typed-in commands in normal mode
 """ =============
     "colorscheme ir_black
     "colorscheme mustang
-    "colorscheme molokai
+    colorscheme molokai
     "set background=light
     " another good one is
     "set background=dark
     "colorscheme zen
     "colorscheme desert
-    " colorscheme molokai
     ":color evening
     "colorscheme vilight
     "colorscheme codeburn
@@ -206,6 +209,7 @@ set showcmd " show typed-in commands in normal mode
 
     " map NerdTree
     map ö :NERDTreeToggle<cr>
+    map <Leader>nf :NERDTreeFind<cr>
 
     " map TagBar
     map ü :TagbarToggle<cr>
@@ -260,6 +264,8 @@ set showcmd " show typed-in commands in normal mode
 
     " open a scratch file in vertical split (requires scratch.vim)
     map <S-F10> :TODOs<cr>
+
+
 
 """ }
 
@@ -685,6 +691,31 @@ endfunction
 let g:calendar_navi = ''
 let g:org_todo_setup = "TODO | DONE"
 
+"""
+""" Swap Buffers inside window splits
+"""
+function! MarkWindowSwap()
+    let g:markedWinNum = winnr()
+endfunction
+
+function! DoWindowSwap()
+    "Mark destination
+    let curNum = winnr()
+    let curBuf = bufnr( "%" )
+    exe g:markedWinNum . "wincmd w"
+    "Switch to source and shuffle dest->source
+    let markedBuf = bufnr( "%" )
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' curBuf
+    "Switch to dest and shuffle source->dest
+    exe curNum . "wincmd w"
+    "Hide and open so that we aren't prompted and keep history
+    exe 'hide buf' markedBuf 
+endfunction
+
+nmap <silent> <leader>mw :call MarkWindowSwap()<CR>
+nmap <silent> <leader>pw :call DoWindowSwap()<CR>
+
 " TODO: closetag.vim
 " TODO: minibufexpl
 " TODO: markdown
@@ -698,8 +729,6 @@ endfunction
 filetype plugin on
 
 hi CursorLine term=reverse cterm=none ctermbg=4
-
-imap jj <Esc>
 
 set encoding=utf8
 
@@ -716,3 +745,13 @@ function! TodoFVCollect()
     execute ":'a,$g/@/m'a"
 endfunction
 map <Leader>l :call TodoFVCollect()<CR>
+
+"
+" for powerline
+" explicitly tell vim that the terminal has 256 colors
+set t_Co=256
+let g:Powerline_symbols = 'fancy'
+
+let g:haddock_browser = "/usr/bin/chromium-browser"
+
+imap jj <Esc>
