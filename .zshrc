@@ -55,3 +55,5 @@ alias v="vim --remote-tab-silent"
 alias project_ng="cd ~/projects/python/newsgrape-ng && . ve/bin/activate"
 alias project_ngcode="project_ng && cd src/newsgrape"
 alias project_medusa="cd ~/projects/python/medusa && . ve/bin/activate"
+
+export PATH=~/Library/Haskell/bin:$PATH
