@@ -65,6 +65,11 @@ Bundle 'eagletmt/ghcmod-vim'
 Bundle 'Shougo/vimproc'
 Bundle 'vim-pandoc/vim-pandoc'
 
+" for clojure
+Bundle 'guns/vim-clojure-static'
+Bundle 'tpope/vim-fireplace'
+Bundle 'kien/rainbow_parentheses.vim'
+
 " install 'exuberant-ctags' to activate this
 "Bundle 'taglist.vim'
 
