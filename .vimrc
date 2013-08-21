@@ -426,6 +426,7 @@ nmap <silent> <leader>pw :call DoWindowSwap()<CR>
     autocmd BufRead *.lucius set filetype=css
     autocmd BufRead *.wsdl set filetype=xml
     autocmd BufRead *.hx set filetype=haxe
+    autocmd BufRead *.cljx set filetype=clojure
     autocmd BufRead *.julius set filetype=javascript
     autocmd BufRead *.md set filetype=markdown
     autocmd BufRead,BufNewFile *.json set filetype=json

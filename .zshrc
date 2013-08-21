@@ -60,4 +60,7 @@ export PATH=~/Library/Haskell/bin:$PATH
 export PATH=/usr/texbin:$PATH
 
 alias tmux="TERM=screen-256color-bce tmux"
+alias mosh="LC_CTYPE="en_US.UTF-8" mosh"
 
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
