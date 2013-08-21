@@ -427,6 +427,7 @@ nmap <silent> <leader>pw :call DoWindowSwap()<CR>
     autocmd BufRead *.wsdl set filetype=xml
     autocmd BufRead *.hx set filetype=haxe
     autocmd BufRead *.julius set filetype=javascript
+    autocmd BufRead *.md set filetype=markdown
     autocmd BufRead,BufNewFile *.json set filetype=json
     "autocmd BufRead,BufNewFile *.py compiler ose
     autocmd BufRead,BufNewFile *.mlua set ft=lua

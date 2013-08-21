@@ -57,6 +57,7 @@ alias project_ngcode="project_ng && cd src/newsgrape"
 alias project_medusa="cd ~/projects/python/medusa && . ve/bin/activate"
 
 export PATH=~/Library/Haskell/bin:$PATH
+export PATH=/usr/texbin:$PATH
 
 alias tmux="TERM=screen-256color-bce tmux"
 
