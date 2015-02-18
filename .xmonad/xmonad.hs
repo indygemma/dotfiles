@@ -1,36 +1,67 @@
 import XMonad
-import XMonad.Config.Gnome
-import XMonad.Util.EZConfig
+import XMonad.Hooks.DynamicLog     (dynamicLogWithPP, xmobarPP, shorten, xmobarColor, PP(..))
+import XMonad.Hooks.ManageDocks    (manageDocks, avoidStruts)
+import XMonad.Util.Run             (spawnPipe)
+import XMonad.Util.EZConfig        (additionalKeysP)
+import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating
+                                   , namedScratchpadAction, namedScratchpadManageHook)
+import qualified XMonad.StackSet as W
+import System.IO (hPutStrLn)
+import Data.List (isPrefixOf)
 
-import qualified Data.Map as M
+myTerminal :: String
+myTerminal = "gnome-terminal"
 
-myModMask = mod1Mask
+scratchPads = [ NS "htop"     spawnHtop     findHtop     manageHtop
+              , NS "terminal" spawnTerminal findTerminal manageTerminal
+              ]
+  where -- htop settings
+        spawnHtop  = myTerminal ++ " -t htop -e htop"
+        findHtop   = fmap ("htop" `isPrefixOf`) title
+        manageHtop = customFloating $ W.RationalRect l t w h
+          where h = 0.7
+                w = 0.8
+                t = (1 - h)/2
+                l = (1 - w)/2
 
-myManageHook = composeAll (
-    [ manageHook gnomeConfig
-    , className =? "Unity-2d-panel" --> doIgnore
-    , className =? "Unity-2d-launcher" --> doFloat
-    ])
+        -- terminal settings
+        spawnTerminal  = myTerminal ++ " -t scratchpad"
+        findTerminal   = resource =? "scratchpad"
+        manageTerminal = customFloating $ W.RationalRect l t w h
+          where h = 0.1
+                w = 1
+                t = 1 - h
+                l = 1 - w
 
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
+myKeyBindings = [ ("M-t", scratchTerminal)
+                , ("M-<Backspace>", scratchHtop)
+                ]
+  where scratchTerminal = namedScratchpadAction scratchPads "terminal"
+        scratchHtop     = namedScratchpadAction scratchPads "htop"
 
-    [ ((modm, xK_p ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
-    ]
-
-    --
-    -- mod-[1..9], Switch to workspace N
+myLogHook xmproc = dynamicLogWithPP xmobarPP
+                 { ppOutput = hPutStrLn xmproc
+                 , ppTitle  = xmobarColor "#cccccc" "" . shorten 50
+                 , ppHidden = noScratchPad
+                 , ppHiddenNoWindows = const ""
+                 }
+  where noScratchPad ws = if ws == "NSP" then "" else ws
 
 main = do
-    xmonad $ gnomeConfig {
-
-        manageHook = myManageHook,
+    xmproc <- spawnPipe "xmobar"
+    xmonad $ defaultConfig
+        { borderWidth = 1
+        , terminal = myTerminal
+        , normalBorderColor = "#000000"
+        -- , focusedBorderColor = "#cd8b00"
+        -- , focusedBorderColor = "#391529"
+        , focusedBorderColor = "#444444"
+        -- rebind mod to the windows key
+        -- , modMask = mod4Mask
+        , manageHook =   manageDocks
+                     <+> manageHook defaultConfig
+                     <+> namedScratchpadManageHook scratchPads
+        , layoutHook = avoidStruts $ layoutHook defaultConfig
+        , logHook    = myLogHook xmproc
+        } `additionalKeysP` myKeyBindings
     
-        borderWidth = 1,
-        normalBorderColor = "#dddddd",
-        focusedBorderColor = "#ff0000"
-
-    } `additionalKeys` [
-            -- open dmenu
-            ((myModMask, xK_p ), spawn "exe=`dmenu_path | dmenu` && eval \"exec $exe\"")
-        ]
-
