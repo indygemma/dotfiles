@@ -7,10 +7,11 @@ import XMonad.Hooks.FadeInactive        (fadeInactiveLogHook)
 import XMonad.Actions.DynamicWorkspaces (removeWorkspace, addWorkspace, renameWorkspace)
 import XMonad.Actions.GridSelect        (goToSelected, defaultGSConfig)
 import XMonad.Actions.Search            (promptSearch, intelligent, multi)
-
+  
 import XMonad.Layout.Accordion          (Accordion(..))
 import XMonad.Layout.NoBorders          (smartBorders)
 import XMonad.Layout.BoringWindows      (boringAuto, focusUp, focusDown, focusMaster)
+import XMonad.Layout.Renamed            (renamed, Rename(..))
 
 import XMonad.Util.Run                  (spawnPipe)
 import XMonad.Util.EZConfig             (additionalKeysP)
@@ -70,8 +71,8 @@ myKeyBindings = [ ("M-t"            , promptedGoto)
                 , ("M-n"            , renameWorkspace myXPConfig)
 
                 -- dynamic spacing
-                , ("M-C-+"          , sendMessage $ SPACING 30)
-                , ("M-C--"          , sendMessage $ SPACING $ negate 30)
+                , ("M-C-+"          , sendMessage $ SPACING 5)
+                , ("M-C--"          , sendMessage $ SPACING $ negate 5)
 
                 , ("M-k"            , focusDown)
                 , ("M-j"            , focusUp)
@@ -98,10 +99,11 @@ tiled = Tall nmaster delta ratio
         
 myLayout = smartBorders
            $ boringAuto
-           $ spacing 30
-           $ BSP.emptyBSP
+           $ renamed [CutWordsLeft 2] -- Remove "Spacing 15" in Layout title
+           $ spacing 15
+           $   BSP.emptyBSP
            ||| tiled
-           ||| Mirror tiled
+           ||| (Mirror tiled)
            ||| Accordion
            ||| Full
 
