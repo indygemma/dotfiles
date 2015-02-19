@@ -16,20 +16,22 @@ import XMonad.Util.Run                  (spawnPipe)
 import XMonad.Util.EZConfig             (additionalKeysP)
 import XMonad.Util.NamedScratchpad      ( NamedScratchpad(..), customFloating
                                         , namedScratchpadAction, namedScratchpadManageHook)
-import qualified XMonad.StackSet as W
 import XMonad.Prompt ( XPrompt(..), greenXPConfig, XPConfig(..)
                      , mkXPrompt, mkComplFunFromList, XPPosition(..)
                      )
 import System.IO (hPutStrLn)
 import Data.List (isPrefixOf)
 
+import qualified XMonad.StackSet as W
+-- import qualified XMonad.Layout.BinarySpacePartition as BSP
+
 -- from lib
 import Common ( myTerminal, runTerminal
               , myFont
               , fg, bg
               )
-
 import Topics (promptedGoto, promptedShift, myTopicNames)
+import Spacing (SPACING(SPACING), spacing)
 
 -- ScratchPads --------------------------------------------------------------
 
@@ -67,6 +69,10 @@ myKeyBindings = [ ("M-t"            , promptedGoto)
                 , ("M--"            , removeWorkspace)
                 , ("M-n"            , renameWorkspace myXPConfig)
 
+                -- dynamic spacing
+                , ("M-C-+"          , sendMessage $ SPACING 10)
+                , ("M-C--"          , sendMessage $ SPACING $ negate 10)
+
                 , ("M-k"            , focusDown)
                 , ("M-j"            , focusUp)
                 , ("M-m"            , focusMaster)
@@ -92,6 +98,7 @@ tiled = Tall nmaster delta ratio
         
 myLayout = smartBorders
            $ boringAuto
+           $ spacing 30
            $ tiled ||| Mirror tiled ||| Accordion ||| Full
 
 -- Prompt --------------------------------------------------------------------
