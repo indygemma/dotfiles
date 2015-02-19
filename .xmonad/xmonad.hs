@@ -112,15 +112,16 @@ newWorkspace = mkXPrompt (Prom "Name for Workspace: ") myXPConfig (mkComplFunFro
 
 main = do
     spawn "xcompmgr"
+    spawn "feh --bg-max --randomize ~/dotfiles/wallpapers/*"
     -- spawn "urxvtd -f"
     xmproc <- spawnPipe "xmobar"
     xmonad $ defaultConfig
-        { borderWidth = 0
+        { borderWidth = 1
         , terminal = myTerminal
         , normalBorderColor = "#000000"
         -- , focusedBorderColor = "#cd8b00"
         -- , focusedBorderColor = "#391529"
-        , focusedBorderColor = "#AF0000"
+        , focusedBorderColor = "#1B6371"
         -- rebind mod to the windows key
         -- , modMask = mod4Mask
         , workspaces = myTopicNames
@@ -128,6 +129,6 @@ main = do
                      <+> manageHook defaultConfig
                      <+> namedScratchpadManageHook scratchPads
         , layoutHook = avoidStruts myLayout
-        , logHook    = fadeInactiveLogHook 0.65 >> myLogHook xmproc
+        , logHook    = fadeInactiveLogHook 0.75 >> myLogHook xmproc
         } `additionalKeysP` myKeyBindings
     
