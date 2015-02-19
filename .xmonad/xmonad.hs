@@ -1,23 +1,36 @@
 import XMonad
-import XMonad.Hooks.DynamicLog     (dynamicLogWithPP, xmobarPP, shorten, xmobarColor, PP(..))
-import XMonad.Hooks.ManageDocks    (manageDocks, avoidStruts)
-import XMonad.Hooks.FadeInactive   (fadeInactiveLogHook)
-import XMonad.Util.Run             (spawnPipe)
-import XMonad.Util.EZConfig        (additionalKeysP)
-import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating
-                                   , namedScratchpadAction, namedScratchpadManageHook)
+import XMonad.Hooks.DynamicLog          (dynamicLogWithPP, xmobarPP, shorten, xmobarColor, PP(..))
+import XMonad.Hooks.ManageDocks         (manageDocks, avoidStruts)
+import XMonad.Hooks.FadeInactive        (fadeInactiveLogHook)
+import XMonad.Actions.DynamicWorkspaces (removeWorkspace, addWorkspace)
+import XMonad.Actions.GridSelect        (goToSelected, defaultGSConfig)
+import XMonad.Actions.Search            (promptSearch, intelligent, multi)
+import XMonad.Util.Run                  (spawnPipe)
+import XMonad.Util.EZConfig             (additionalKeysP)
+import XMonad.Util.NamedScratchpad      ( NamedScratchpad(..), customFloating
+                                        , namedScratchpadAction, namedScratchpadManageHook)
 import qualified XMonad.StackSet as W
+import XMonad.Prompt ( XPrompt(..), greenXPConfig, XPConfig(..)
+                     , mkXPrompt, mkComplFunFromList, XPPosition(..)
+                     )
 import System.IO (hPutStrLn)
 import Data.List (isPrefixOf)
 
-myTerminal :: String
-myTerminal = "gnome-terminal"
+-- from lib
+import Common ( myTerminal, runTerminal
+              , myFont
+              , fg, bg
+              )
+
+import Topics (promptedGoto, promptedShift, myTopicNames)
+
+-- ScratchPads --------------------------------------------------------------
 
 scratchPads = [ NS "htop"     spawnHtop     findHtop     manageHtop
               , NS "terminal" spawnTerminal findTerminal manageTerminal
               ]
   where -- htop settings
-        spawnHtop  = myTerminal ++ " -t htop -e htop"
+        spawnHtop  = runTerminal "htop" $ Just "htop"
         findHtop   = fmap ("htop" `isPrefixOf`) title
         manageHtop = customFloating $ W.RationalRect l t w h
           where h = 0.7
@@ -26,7 +39,7 @@ scratchPads = [ NS "htop"     spawnHtop     findHtop     manageHtop
                 l = (1 - w)/2
 
         -- terminal settings
-        spawnTerminal  = myTerminal ++ " -t scratchpad"
+        spawnTerminal  = runTerminal "scratchpad" Nothing
         findTerminal   = resource =? "scratchpad"
         manageTerminal = customFloating $ W.RationalRect l t w h
           where h = 0.1
@@ -34,11 +47,21 @@ scratchPads = [ NS "htop"     spawnHtop     findHtop     manageHtop
                 t = 1 - h
                 l = 1 - w
 
-myKeyBindings = [ ("M-t", scratchTerminal)
-                , ("M-<Backspace>", scratchHtop)
+-- Key Bindings --------------------------------------------------------------
+
+myKeyBindings = [ ("M-t"            , promptedGoto)
+                , ("M-S-t"          , promptedShift)
+                , ("M-g"            , goToSelected defaultGSConfig)
+                , ("M-s"            , promptSearch myXPConfig $ intelligent multi)
+                  
+                , ("M-S-<Backspace>", scratchHtop)
+                , ("M-S-r"          , spawn "xmonad --recompile && xmonad --restart")
+                , ("M-+"            , newWorkspace)
+                , ("M--"            , removeWorkspace)
                 ]
-  where scratchTerminal = namedScratchpadAction scratchPads "terminal"
-        scratchHtop     = namedScratchpadAction scratchPads "htop"
+  where scratchHtop     = namedScratchpadAction scratchPads "htop"
+
+-- Key Bindings --------------------------------------------------------------
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
                  { ppOutput = hPutStrLn xmproc
@@ -48,8 +71,16 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
                  }
   where noScratchPad ws = if ws == "NSP" then "" else ws
 
+data Prom = Prom String
+instance XPrompt Prom where
+  showXPrompt (Prom x) = x
+
+myXPConfig = greenXPConfig { font = myFont, fgColor = fg, bgColor = bg, fgHLight = bg, bgHLight = fg, position = Top }
+newWorkspace = mkXPrompt (Prom "Name for Workspace: ") myXPConfig (mkComplFunFromList []) addWorkspace
+
 main = do
-    xcompmgr <- spawn "kilall xcompmgr &> /dev/null && xcompmgr"
+    spawn "xcompmgr"
+    -- spawn "urxvtd -f"
     xmproc <- spawnPipe "xmobar"
     xmonad $ defaultConfig
         { borderWidth = 0
@@ -60,10 +91,11 @@ main = do
         , focusedBorderColor = "#AF0000"
         -- rebind mod to the windows key
         -- , modMask = mod4Mask
+        , workspaces = myTopicNames
         , manageHook =   manageDocks
                      <+> manageHook defaultConfig
                      <+> namedScratchpadManageHook scratchPads
         , layoutHook = avoidStruts $ layoutHook defaultConfig
-        , logHook    = fadeInactiveLogHook 0.5 >> myLogHook xmproc
+        , logHook    = fadeInactiveLogHook 0.65 >> myLogHook xmproc
         } `additionalKeysP` myKeyBindings
     
