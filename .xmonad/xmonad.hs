@@ -4,7 +4,7 @@ import XMonad.Hooks.DynamicLog          (dynamicLogWithPP, xmobarPP, shorten, xm
 import XMonad.Hooks.ManageDocks         (manageDocks, avoidStruts)
 import XMonad.Hooks.FadeInactive        (fadeInactiveLogHook)
 
-import XMonad.Actions.DynamicWorkspaces (removeWorkspace, addWorkspace)
+import XMonad.Actions.DynamicWorkspaces (removeWorkspace, addWorkspace, renameWorkspace)
 import XMonad.Actions.GridSelect        (goToSelected, defaultGSConfig)
 import XMonad.Actions.Search            (promptSearch, intelligent, multi)
 
@@ -65,6 +65,7 @@ myKeyBindings = [ ("M-t"            , promptedGoto)
                 , ("M-S-r"          , spawn "xmonad --recompile && xmonad --restart")
                 , ("M-+"            , newWorkspace)
                 , ("M--"            , removeWorkspace)
+                , ("M-n"            , renameWorkspace myXPConfig)
 
                 , ("M-k"            , focusDown)
                 , ("M-j"            , focusUp)
