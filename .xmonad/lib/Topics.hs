@@ -22,6 +22,8 @@ data TopicItem = TI { topicName   :: Topic
 myTopics :: [TopicItem]
 myTopics = [ TI "main"   ""        (return ())
            , TI "web"    ""        (spawn "google-chrome")
+           , TI "email"  ""        (spawn $ runTerminal "mutt" $ Just "mutt")
+           , TI "blog"   ""        (spawn "google-chrome --new-window http://dev.indygemma.com/phame/post/")
            , TI "xmonad" ".xmonad" (spawnInTopicDir "emacs xmonad.hs")
            ]
 
