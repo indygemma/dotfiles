@@ -55,7 +55,7 @@ main = do
         , normalBorderColor = "#000000"
         -- , focusedBorderColor = "#cd8b00"
         -- , focusedBorderColor = "#391529"
-        , focusedBorderColor = "#444444"
+        , focusedBorderColor = "#AF0000"
         -- rebind mod to the windows key
         -- , modMask = mod4Mask
         , manageHook =   manageDocks
