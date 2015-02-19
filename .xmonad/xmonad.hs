@@ -1,6 +1,7 @@
 import XMonad
 import XMonad.Hooks.DynamicLog     (dynamicLogWithPP, xmobarPP, shorten, xmobarColor, PP(..))
 import XMonad.Hooks.ManageDocks    (manageDocks, avoidStruts)
+import XMonad.Hooks.FadeInactive   (fadeInactiveLogHook)
 import XMonad.Util.Run             (spawnPipe)
 import XMonad.Util.EZConfig        (additionalKeysP)
 import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating
@@ -48,9 +49,10 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
   where noScratchPad ws = if ws == "NSP" then "" else ws
 
 main = do
+    xcompmgr <- spawn "kilall xcompmgr &> /dev/null && xcompmgr"
     xmproc <- spawnPipe "xmobar"
     xmonad $ defaultConfig
-        { borderWidth = 1
+        { borderWidth = 0
         , terminal = myTerminal
         , normalBorderColor = "#000000"
         -- , focusedBorderColor = "#cd8b00"
@@ -62,6 +64,6 @@ main = do
                      <+> manageHook defaultConfig
                      <+> namedScratchpadManageHook scratchPads
         , layoutHook = avoidStruts $ layoutHook defaultConfig
-        , logHook    = myLogHook xmproc
+        , logHook    = fadeInactiveLogHook 0.5 >> myLogHook xmproc
         } `additionalKeysP` myKeyBindings
     
