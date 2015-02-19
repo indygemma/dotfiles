@@ -23,7 +23,6 @@ import System.IO (hPutStrLn)
 import Data.List (isPrefixOf)
 
 import qualified XMonad.StackSet as W
--- import qualified XMonad.Layout.BinarySpacePartition as BSP
 
 -- from lib
 import Common ( myTerminal, runTerminal
@@ -32,6 +31,7 @@ import Common ( myTerminal, runTerminal
               )
 import Topics (promptedGoto, promptedShift, myTopicNames)
 import Spacing (SPACING(SPACING), spacing)
+import qualified BinarySpacePartition as BSP
 
 -- ScratchPads --------------------------------------------------------------
 
@@ -70,8 +70,8 @@ myKeyBindings = [ ("M-t"            , promptedGoto)
                 , ("M-n"            , renameWorkspace myXPConfig)
 
                 -- dynamic spacing
-                , ("M-C-+"          , sendMessage $ SPACING 10)
-                , ("M-C--"          , sendMessage $ SPACING $ negate 10)
+                , ("M-C-+"          , sendMessage $ SPACING 30)
+                , ("M-C--"          , sendMessage $ SPACING $ negate 30)
 
                 , ("M-k"            , focusDown)
                 , ("M-j"            , focusUp)
@@ -99,7 +99,11 @@ tiled = Tall nmaster delta ratio
 myLayout = smartBorders
            $ boringAuto
            $ spacing 30
-           $ tiled ||| Mirror tiled ||| Accordion ||| Full
+           $ BSP.emptyBSP
+           ||| tiled
+           ||| Mirror tiled
+           ||| Accordion
+           ||| Full
 
 -- Prompt --------------------------------------------------------------------
 
