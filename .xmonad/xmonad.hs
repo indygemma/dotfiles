@@ -117,7 +117,7 @@ newWorkspace = mkXPrompt (Prom "Name for Workspace: ") myXPConfig (mkComplFunFro
 main = do
     spawn "xcompmgr"
     spawn "feh --bg-max --randomize ~/dotfiles/wallpapers/*"
-    -- spawn "urxvtd -f"
+    spawn "urxvtd -f"
     xmproc <- spawnPipe "xmobar"
     xmonad $ defaultConfig
         { borderWidth = 1

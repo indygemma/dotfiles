@@ -7,12 +7,12 @@ module Common (
 )where
 
 myTerminal :: String
-myTerminal = "gnome-terminal"
+myTerminal = "urxvtc"
 
 runTerminal :: String -> Maybe String -> String
 runTerminal title mCmd = case mCmd of
-  Just cmd -> myTerminal ++ " -t " ++ title ++ " -e " ++ cmd
-  Nothing  -> myTerminal ++ " -t " ++ title
+  Just cmd -> myTerminal ++ " -title " ++ title ++ " -e " ++ cmd
+  Nothing  -> myTerminal ++ " -title " ++ title
 
 myFont :: String
 myFont = "xft:Liberation Mono:size=8:antialias=true"
