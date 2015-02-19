@@ -1,10 +1,17 @@
 import XMonad
+
 import XMonad.Hooks.DynamicLog          (dynamicLogWithPP, xmobarPP, shorten, xmobarColor, PP(..))
 import XMonad.Hooks.ManageDocks         (manageDocks, avoidStruts)
 import XMonad.Hooks.FadeInactive        (fadeInactiveLogHook)
+
 import XMonad.Actions.DynamicWorkspaces (removeWorkspace, addWorkspace)
 import XMonad.Actions.GridSelect        (goToSelected, defaultGSConfig)
 import XMonad.Actions.Search            (promptSearch, intelligent, multi)
+
+import XMonad.Layout.Accordion          (Accordion(..))
+import XMonad.Layout.NoBorders          (smartBorders)
+import XMonad.Layout.BoringWindows      (boringAuto, focusUp, focusDown, focusMaster)
+
 import XMonad.Util.Run                  (spawnPipe)
 import XMonad.Util.EZConfig             (additionalKeysP)
 import XMonad.Util.NamedScratchpad      ( NamedScratchpad(..), customFloating
@@ -58,6 +65,10 @@ myKeyBindings = [ ("M-t"            , promptedGoto)
                 , ("M-S-r"          , spawn "xmonad --recompile && xmonad --restart")
                 , ("M-+"            , newWorkspace)
                 , ("M--"            , removeWorkspace)
+
+                , ("M-k"            , focusDown)
+                , ("M-j"            , focusUp)
+                , ("M-m"            , focusMaster)
                 ]
   where scratchHtop     = namedScratchpadAction scratchPads "htop"
 
@@ -70,6 +81,19 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
                  , ppHiddenNoWindows = const ""
                  }
   where noScratchPad ws = if ws == "NSP" then "" else ws
+        
+-- Layout --------------------------------------------------------------------
+
+tiled = Tall nmaster delta ratio
+  where nmaster = 1
+        ratio   = 70/100
+        delta   =  1/50
+        
+myLayout = smartBorders
+           $ boringAuto
+           $ tiled ||| Mirror tiled ||| Accordion ||| Full
+
+-- Prompt --------------------------------------------------------------------
 
 data Prom = Prom String
 instance XPrompt Prom where
@@ -95,7 +119,7 @@ main = do
         , manageHook =   manageDocks
                      <+> manageHook defaultConfig
                      <+> namedScratchpadManageHook scratchPads
-        , layoutHook = avoidStruts $ layoutHook defaultConfig
+        , layoutHook = avoidStruts myLayout
         , logHook    = fadeInactiveLogHook 0.65 >> myLogHook xmproc
         } `additionalKeysP` myKeyBindings
     
