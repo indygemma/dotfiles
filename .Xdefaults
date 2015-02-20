@@ -61,7 +61,7 @@ Xft.lcdfilter: lcddefault
 URxvt.scrollBar:          false
 
 URxvt.depth: 32
-URxvt.background: [90]#333
+URxvt.background: [97]#333
 
 URxvt.perl-ext-common: default,matcher
 URxvt.url-launcher: /usr/bin/xdg-open
