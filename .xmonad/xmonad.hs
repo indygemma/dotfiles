@@ -7,14 +7,14 @@ import XMonad.Hooks.FadeInactive        (fadeInactiveLogHook)
 import XMonad.Actions.DynamicWorkspaces (removeWorkspace, addWorkspace, renameWorkspace)
 import XMonad.Actions.GridSelect        (goToSelected, defaultGSConfig)
 import XMonad.Actions.Search            (promptSearch, intelligent, multi)
-  
+
 import XMonad.Layout.Accordion          (Accordion(..))
 import XMonad.Layout.NoBorders          (smartBorders)
 import XMonad.Layout.BoringWindows      (boringAuto, focusUp, focusDown, focusMaster)
 import XMonad.Layout.Renamed            (renamed, Rename(..))
 
 import XMonad.Util.Run                  (spawnPipe)
-import XMonad.Util.EZConfig             (additionalKeysP)
+import XMonad.Util.EZConfig             ( additionalKeys, additionalKeysP)
 import XMonad.Util.NamedScratchpad      ( NamedScratchpad(..), customFloating
                                         , namedScratchpadAction, namedScratchpadManageHook)
 import XMonad.Prompt ( XPrompt(..), greenXPConfig, XPConfig(..)
@@ -24,6 +24,7 @@ import System.IO (hPutStrLn)
 import Data.List (isPrefixOf)
 
 import qualified XMonad.StackSet as W
+import qualified Graphics.X11.ExtraTypes.XF86 as XF86
 
 -- from lib
 import Common ( myTerminal, runTerminal
@@ -80,7 +81,22 @@ myKeyBindings = [ ("M-t"            , promptedGoto)
                 ]
   where scratchHtop     = namedScratchpadAction scratchPads "htop"
 
--- Key Bindings --------------------------------------------------------------
+mediaKeyBindings = [
+  -- audio media keys
+    ((0, XF86.xF86XK_AudioMute ), spawn "amixer -D pulse set Master toggle" )
+  , ((0, XF86.xF86XK_AudioLowerVolume ), spawn "amixer -D pulse set Master 10%-" )
+  , ((0, XF86.xF86XK_AudioRaiseVolume ), spawn "amixer -D pulse set Master 10%+" )
+
+  -- screen brightness keys
+  , ((0, XF86.xF86XK_MonBrightnessDown ), spawn "xcalib -co 50 -a" )
+  , ((0, XF86.xF86XK_MonBrightnessUp ),   spawn "xcalib -c" )
+
+  -- keyboard brightness keys
+  , ((0, XF86.xF86XK_KbdBrightnessDown ), spawn "kbdlight down" )
+  , ((0, XF86.xF86XK_KbdBrightnessUp ),   spawn "kbdlight up" )
+  ]
+
+-- Log Hook  --------------------------------------------------------------
 
 myLogHook xmproc = dynamicLogWithPP xmobarPP
                  { ppOutput = hPutStrLn xmproc
@@ -89,14 +105,14 @@ myLogHook xmproc = dynamicLogWithPP xmobarPP
                  , ppHiddenNoWindows = const ""
                  }
   where noScratchPad ws = if ws == "NSP" then "" else ws
-        
+
 -- Layout --------------------------------------------------------------------
 
 tiled = Tall nmaster delta ratio
   where nmaster = 1
         ratio   = 70/100
         delta   =  1/50
-        
+
 myLayout = smartBorders
            $ boringAuto
            $ renamed [CutWordsLeft 2] -- Remove "Spacing 15" in Layout title
@@ -119,7 +135,7 @@ newWorkspace = mkXPrompt (Prom "Name for Workspace: ") myXPConfig (mkComplFunFro
 main = do
     spawn "xcompmgr"
     spawn "feh --bg-max --randomize ~/dotfiles/wallpapers/*"
-    spawn "urxvtd -f"
+    --spawn "urxvtd -f"
     xmproc <- spawnPipe "xmobar"
     xmonad $ defaultConfig
         { borderWidth = 1
@@ -129,12 +145,13 @@ main = do
         -- , focusedBorderColor = "#391529"
         , focusedBorderColor = "#1B6371"
         -- rebind mod to the windows key
-        -- , modMask = mod4Mask
+        , modMask = mod4Mask
         , workspaces = myTopicNames
         , manageHook =   manageDocks
                      <+> manageHook defaultConfig
                      <+> namedScratchpadManageHook scratchPads
         , layoutHook = avoidStruts myLayout
-        , logHook    = fadeInactiveLogHook 0.75 >> myLogHook xmproc
+        , logHook    = fadeInactiveLogHook 0.90 >> myLogHook xmproc
         } `additionalKeysP` myKeyBindings
-    
+          `additionalKeys`  mediaKeyBindings
+

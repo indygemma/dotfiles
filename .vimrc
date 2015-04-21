@@ -24,12 +24,12 @@ Bundle 'gmarik/vundle'
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-repeat'
 " this didn't work, just like taglist.vim
-Bundle 'SuperTab-continued'
+"Bundle 'SuperTab-continued'
 Bundle 'flazz/vim-colorschemes'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'msanders/snipmate.vim'
+"Bundle 'msanders/snipmate.vim'
 Bundle 'sontek/rope-vim'
 Bundle 'mileszs/ack.vim'
 " Fuzzyfinder requires 'L9' as dependency
@@ -46,15 +46,16 @@ Bundle 'NarrowRegion'
 " for neco-ghc and ghcmod-vim
 Bundle 'Shougo/vimshell'
 " for neco-ghc and ghcmod-vim....need extra step: 'make -f make_mac.mak'
-Bundle 'Shougo/vimproc'
-set rtp+=~/.vim/bundle/vimproc
+"Bundle 'Shougo/vimproc'
+"set rtp+=~/.vim/bundle/vimproc
 " requires 'cabal install ghc-mod'
 Bundle 'ujihisa/neco-ghc'
 set rtp+=~/.vim/bundle/neco-ghc
-Bundle 'eagletmt/ghcmod-vim'
+"Bundle 'eagletmt/ghcmod-vim'
 Bundle 'Shougo/neocomplcache'
 set rtp+=~/.vim/bundle/neocomplcache
 Bundle 'thinca/vim-quickrun'
+Bundle 'ivanov/vim-ipython'
 " requires cd into bundle and 'cabal configure && cabal build && cabal install'
 Bundle 'bitc/lushtags'
 set rtp+=~/.vim/bundle/lushtags
@@ -64,6 +65,7 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'Shougo/vimproc'
 Bundle 'vim-pandoc/vim-pandoc'
+Bundle 'scrooloose/syntastic'
 
 " for clojure
 Bundle 'guns/vim-clojure-static'
@@ -185,7 +187,7 @@ set showcmd " show typed-in commands in normal mode
     ":color evening
     "colorscheme vilight
     "colorscheme codeburn
-    colorscheme custom_molokai
+    "colorscheme custom_molokai
     "colorscheme oceanlight
     "colorscheme oceanblack
     "colorscheme jellybeans
@@ -762,3 +764,15 @@ let g:Powerline_symbols = 'fancy'
 let g:haddock_browser = "/usr/bin/chromium-browser"
 
 imap jj <Esc>
+
+"
+" syntastic
+"
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
+
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
