@@ -93,9 +93,9 @@ filetype on
 filetype plugin on
 filetype plugin indent on " enable file-level indenting with gg=G
 set mouse=a
-set tabstop=4
+set tabstop=2
 set smarttab
-set shiftwidth=4
+set shiftwidth=2
 set autoindent
 "set smartindent
 set expandtab
@@ -776,3 +776,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+let g:syntastic_aggregate_errors = 1
+
+let g:syntastic_cpp_compiler_options = "-std=c++11 -Wall -Wextra -Wpedantic"
+let g:syntastic_cpp_check_header = 1
